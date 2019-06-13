@@ -18,6 +18,12 @@ public class Constants {
     //public static final String BUCKET_NAME = "adaptvideostest";
     //public static final String BUCKET_NAME = "pitts-study";
     public static final String BUCKET_NAME = "abcd-study";
+    public static String study = "abcd-study";
+    public static String deviceID;
+    public static String modelName;
+    public static String modelNumber;
+    public static int androidVersion;
+    public static String earsVersion;
 
 
 }

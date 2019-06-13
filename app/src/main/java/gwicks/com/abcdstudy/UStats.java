@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.TimeZone;
 
 public class UStats{
 
@@ -46,7 +46,7 @@ public class UStats{
 //        long startTime = calendar.getTimeInMillis() - 24*60*60*1000+1000000 ;
 
 
-        Log.d(TAG, "getUsageStatsList: endtime: " + endTime + "starttime: " + startTime);
+        Log.d(TAG, "getUsageStatsList: endtime: " + endTime + " starttime: " + startTime);
 
         Date one = new Date(startTime);
         Date two = new Date(endTime);
@@ -58,26 +58,26 @@ public class UStats{
 
         List<UsageStats> usageStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,  startTime,endTime);     // calendar.getTimeInMillis(), System.currentTimeMillis()); //(UsageStatsManager.INTERVAL_DAILY,startTime,endTime);
 
-        Map<String, UsageStats> stats = usm.queryAndAggregateUsageStats(startTime, endTime);
-        Log.d(TAG, "getUsageStatsList: 1");
+       // Map<String, UsageStats> stats = usm.queryAndAggregateUsageStats(startTime, endTime);
+        //Log.d(TAG, "getUsageStatsList: 1");
 
 //        for(String key : stats.keySet()){
 //            Log.d(TAG, "getUsageStatsList: KEYS: " + stats.get(key));
 //        }
 
-        Log.d(TAG, "getUsageStatsList: 2");
+        //Log.d(TAG, "getUsageStatsList: 2");
 //
 //        for(Map.Entry<String, UsageStats> entry : stats.entrySet()){
 //            Log.d(TAG, "getUsageStatsList: " + entry.getKey() + " " + entry.getValue().getTotalTimeInForeground());
 //        }
 
-        Log.d(TAG, "getUsageStatsList: 3");
+        //Log.d(TAG, "getUsageStatsList: 3");
 
-        String aggregateApps = (context.getExternalFilesDir(null) + directoryName + "AppUsageAggeagate" + time + ".txt");
-        File agFile = new File(aggregateApps);
-        for(Map.Entry<String, UsageStats> entry : stats.entrySet()){
-            writeToFile(agFile, entry.getKey() +"," + entry.getValue().getTotalTimeInForeground() + "\n");
-        }
+//        String aggregateApps = (context.getExternalFilesDir(null) + directoryName + "AppUsageAggeagate" + time + ".txt");
+//        File agFile = new File(aggregateApps);
+//        for(Map.Entry<String, UsageStats> entry : stats.entrySet()){
+//            writeToFile(agFile, entry.getKey() +"," + entry.getValue().getTotalTimeInForeground() + "\n");
+//        }
 
 
 
@@ -102,6 +102,7 @@ public class UStats{
 
 
         File file = new File(uri);
+        Log.d(TAG, "printUsageStats: creating file in printUsageStats");
         JSONArray jsonArray = new JSONArray();
         JSONObject object = null;
         for (UsageStats u : usageStatsList){
@@ -162,6 +163,11 @@ public class UStats{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "printUsageStats: writing json object to file");
+
+        TimeZone timeZone = TimeZone.getDefault();
+
+        writeToFile(file,Constants.deviceID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "," + timeZone+ "\n" );
 
         writeToFile(file, finalObject.toString());
         return uri;
@@ -187,6 +193,7 @@ public class UStats{
     }
 
     private static void writeToFile(File file, String data) {
+        Log.d(TAG, "writeToFile: writing to file");
 
         FileOutputStream stream = null;
         try {
@@ -197,11 +204,14 @@ public class UStats{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         try {
 
             stream.close();
-        } catch (IOException e) {
+        }  catch (Exception e) {
             e.printStackTrace();
         }
     }

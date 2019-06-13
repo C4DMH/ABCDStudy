@@ -38,7 +38,7 @@
         android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:text=" Donating your digital data helps us\n study patterns in behavior. We’re\n studying data to learn how to predict\n a mental health crisis before it\n happens, so support can be sent in\n time. "
+        android:text=" Donating your digital data helps us study\n patterns in behavior. Our devices have a\n lot to say about behavior and health.\n Donating your child's limited digital data\n helps us study patterns in behaviour. We're\n studying this data to learn how screen time\n shapes brain development and mental health"
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/textView2"
         android:layout_marginStart="24dp"

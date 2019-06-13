@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">EARS</string>
-    <string name="ime_name">EARS</string>
+    <string name="app_name">EARS ABCD</string>
+    <string name="ime_name">EARS ABCD</string>
 
 
 
@@ -9,14 +9,12 @@
 
 
 •	The app will work in the background, and you will not have to interact with it until/unless you wish to uninstall it. We will collect data on your phone usage from your phone. The data is encrypted before it is then sent to a secure server where it is encrypted again. EARS can only collect data that is already measured and logged by the device. EARS does not change or extend the functional capabilities of your device.  The types of data sent to us include the following:<br><br>\t\t\t\t
-a.	<u>Device Usage Patterns.</u> We will also collect other aspects of mobile device usage depending on what your device collects. Including but not limited to application usage time, music (artist, track, time listened), and motion sensing data. We will collect the frequency and duration of each application usage, as well as the total time that your screen is on.<br><br>\t\t\t\t
+a.	<u>Device Usage Patterns.</u> We will also collect other aspects of mobile device usage depending on what your device collects. Including but not limited to application usage time, and motion sensing data. We will collect the frequency and duration of each application usage, as well as the total time that your screen is on.<br><br>\t\t\t\t
 <b>Confidentiality:</b><br>\t\t
-•	We make a significant effort to project your identity. Easily identifiable information like names or addresses are removed and replaced with a randomly generated ID when possible. Data collected from you during this study may eventually be shared with other researchers for scientific purposes only; however, this data will not contain identifying information that would allow others to easily associate the data with you. If a researcher needs access to any identity data they must first obtain ethics approval from their institution as well as meeting stringent requirements.  When the results of this research are published or presented in any public forum, absolutely no information will be included that might reveal your identity.
+•	We make a significant effort to project your identity. Easily identifiable information like names or addresses are removed and replaced with a randomly generated ID when possible. Data collected from you during this study may eventually be shared with other researchers for scientific purposes only; however, this data will not contain identifying information that would allow others to easily associate the data with you. If a researcher needs access to any data they must first obtain ethics approval from their institution as well as meeting stringent requirements.  When the results of this research are published or presented in any public forum, absolutely no information will be included that might reveal your identity.
 <br><br><b>Voluntary Participation/Withdrawal:</b><br>\t\t
 •	Using this app is voluntary. After you install it, you can remove it any time and no more data will be collected.<br>\t\t
 
-<b>Notifications:</b><br>\t\t
-•	We reserve the right to electronically notify you of life events based upon our current lines of research. These will be unmonitored automated notifications.
 
 
 

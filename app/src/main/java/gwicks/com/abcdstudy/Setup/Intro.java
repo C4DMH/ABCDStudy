@@ -23,11 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
-import gwicks.com.abcdstudy.BuildConfig;
 import gwicks.com.abcdstudy.R;
-
-import static android.os.Build.MANUFACTURER;
-import static android.os.Build.MODEL;
 
 public class Intro extends AppCompatActivity {
 
@@ -69,13 +65,13 @@ public class Intro extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String path = getExternalFilesDir(null) + "/InstallInfo/";
-
-        File directory = new File(path);
-
-        if(!directory.exists()){
-            directory.mkdirs();
-        }
+//        String path = getExternalFilesDir(null) + "/InstallInfo/";
+//
+//        File directory = new File(path);
+//
+//        if(!directory.exists()){
+//            directory.mkdirs();
+//        }
 
 //        String desination = Environment.getExternalStorageDirectory().getAbsolutePath() + "/sleep/";
 //        File destination = new File(desination);
@@ -84,26 +80,26 @@ public class Intro extends AppCompatActivity {
 //            destination.mkdirs();
 //        }
 
-        File installFile = new File(path + "InstallFile.txt");
+//        File installFile = new File(path + "InstallFile.txt");
+//
+//
+//        String deviceMan = MANUFACTURER;
+//
+//        Log.d(TAG, "onResume: deviceMan = " + deviceMan);
+//
+//        String deviceModel = MODEL;
+//        int versionCode = BuildConfig.VERSION_CODE;
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionFlavor = BuildConfig.FLAVOR;
+//
+//        writeToFile(installFile, deviceMan + "," + deviceModel +"," + versionCode +"," + versionName + "," + versionName + "," + versionName + "," + versionFlavor);
 
-
-        String deviceMan = MANUFACTURER;
-
-        Log.d(TAG, "onResume: deviceMan = " + deviceMan);
-
-        String deviceModel = MODEL;
-        int versionCode = BuildConfig.VERSION_CODE;
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionFlavor = BuildConfig.FLAVOR;
-
-        writeToFile(installFile, deviceMan + "," + deviceModel +"," + versionCode +"," + versionName + "," + versionName + "," + versionName + "," + versionFlavor);
-
-
-        if(deviceMan.equals("LGE")){ // LG bug, so cant step through to end
-            moveToNextStep();
-        }
+//
+//        if(deviceMan.equals("LGE")){ // LG bug, so cant step through to end
+//            moveToNextStep();
+//        }
         // If we have access to usage stats, move to final step as app has previously been installed
-        else if(isAccessGranted()) {
+        if(isAccessGranted()) {
             moveToFinalStep();
         }
         // Otherwise, install from the beginning
@@ -168,6 +164,8 @@ public class Intro extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(TAG, "isAccessGranted: name not found");
             return false;
+        }catch(Exception e){
+            return false;
         }
     }
 
@@ -195,23 +193,36 @@ public class Intro extends AppCompatActivity {
         return false;
     }
 
-    public static void writeToFile(File file, String data) {
+    private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
+        //Log.d(TAG, "The state of the media is: " + Environment.getExternalStorageState());
+        //Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
+        //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {
+            //Log.e("History", "In try");
+            //Log.d(TAG, "writeToFile: ");
             stream = new FileOutputStream(file, true);
+            //Log.d(TAG, "writeToFile: 2");
             stream.write(data.getBytes());
+            //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
             Log.e("History", "In catch");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        try {
-            stream.close();
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
+
+
+        try {
+
+            stream.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

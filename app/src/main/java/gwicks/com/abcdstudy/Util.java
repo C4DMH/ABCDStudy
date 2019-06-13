@@ -15,8 +15,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -91,7 +89,7 @@ public class Util {
         if (sS3Client == null) {
             ClientConfiguration config = new ClientConfiguration();
             config.setMaxErrorRetry(500);
-            //config.
+            //config.setP
             config.setConnectionTimeout(50000);
             sS3Client = new AmazonS3Client(getCredProvider(context.getApplicationContext()), config);
 
@@ -242,21 +240,21 @@ public class Util {
                         break;
                     case COMPLETED:
 
-                        long unixTime = System.currentTimeMillis() / 1000L;
-                        String desination = context.getExternalFilesDir(null) + "/videoDIARY/buffered_" + unixTime + ".log";
+//                        long unixTime = System.currentTimeMillis() / 1000L;
+//                        //String desination = context.getExternalFilesDir(null) + "/videoDIARY/buffered_" + unixTime + ".log";
+//
+//
+//                        File destination = new File(desination);
+//                        try {
+//                            FileUtils.copyFile(file, destination);
+//                            Log.d("LogUploadTask", "Copyting file to VideoDIARY");
+//
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
 
-                        File destination = new File(desination);
-                        try {
-                            FileUtils.copyFile(file, destination);
-                            Log.d("LogUploadTask", "Copyting file to VideoDIARY");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-
-                        Log.d(TAG, String.format("Transfer ID %d has completed", id));
+                        Log.d(TAG, String.format("Transfer ID %d has completed in uploadFile 1 ", id));
                         callback.onComplete(id, state);
                         if (deleteAfter) {
                             final String filename = file.getName();
@@ -288,7 +286,7 @@ public class Util {
 
 
     public static void uploadFileToBucket(final File file, final String filename,
-                                          final boolean deleteAfter, final Util.FileTransferCallback callback, String folder) {
+                                          final boolean deleteAfter, final Util.FileTransferCallback callback, final String folder) {
         initUserId();
         Log.d("Log", "This is in AWSUTIL upload file to bucket");
         final String filePath = String.format("%s%s", userId + folder, filename);
@@ -305,6 +303,7 @@ public class Util {
                 switch (state) {
                     case IN_PROGRESS:
                         Log.d(TAG, String.format("Transfer ID %d has begun", id));
+                        Log.d(TAG, "onStateChanged: folder is: " + folder);
                         callback.onStart(id, state);
                         break;
                     case COMPLETED:
@@ -323,7 +322,8 @@ public class Util {
 //                        }
 
 
-                        Log.d(TAG, String.format("Transfer ID %d has completed", id));
+                        Log.d(TAG, String.format("Transfer ID %d has completed in uploadFile 2", id));
+                        Log.d(TAG, "onStateChanged: folder is: " + folder);
                         callback.onComplete(id, state);
                         if (deleteAfter) {
                             final String filename = file.getName();

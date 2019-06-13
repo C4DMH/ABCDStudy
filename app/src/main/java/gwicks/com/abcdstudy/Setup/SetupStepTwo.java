@@ -59,7 +59,7 @@ public class SetupStepTwo extends AppCompatActivity {
                 // 18th Jan 2018, below works, trying to stop using the intent ( ie try back button below).
                 if (isAccessGranted()) {
                     Log.d(TAG, "run: 3");
-                    Intent i = new Intent(SetupStepTwo.this, SetupStepThree.class);
+                    Intent i = new Intent(SetupStepTwo.this, BatteryOptimization.class);
                     Log.d(TAG, "run: 42");
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     SetupStepTwo.this.startActivity(i);

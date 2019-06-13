@@ -4,16 +4,24 @@
           package="gwicks.com.abcdstudy">
 
 
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <uses-permission
+        android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
         android:name=".AnyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/icon_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_round"
@@ -46,6 +54,12 @@
             android:screenOrientation="portrait">
 
         </activity>
+
+        <activity
+            android:name=".Setup.BatteryOptimization"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".Setup.FinishInstallScreen"
 
@@ -61,12 +75,25 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <!--<activity-->
+            <!--android:name=".Setup.MeteredDataClass"-->
+            <!--android:windowSoftInputMode="adjustPan"-->
+
+            <!--android:screenOrientation="portrait">-->
+
+        <!--</activity>-->
 
         <activity
             android:name=".Setup.SetupStepThree"
             android:screenOrientation="portrait">
 
         </activity>
+
+        <activity android:name=".DailyEMA"
+                  android:launchMode="singleTask"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true"
+                  android:screenOrientation="portrait"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -79,6 +106,24 @@
         <receiver android:name=".RebootBroadCastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".DailyEMAAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".DailyEMAUploadReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".StatsAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
             </intent-filter>
         </receiver>
 

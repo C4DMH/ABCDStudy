@@ -1,19 +1,24 @@
 package gwicks.com.abcdstudy;
 
+import android.annotation.SuppressLint;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.util.Log;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import javax.crypto.NoSuchPaddingException;
@@ -30,13 +35,27 @@ public class StatsJobService  extends JobService {
 
     String userID;
 
+    String meteredNetworkData;
 
-    static String folder = "/videoDIARY/";
+
+    static String folder = "/AppUsageService/";
 
     @Override
     public boolean onStartJob(JobParameters params) {
 
         Calendar c = Calendar.getInstance();
+
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+// Checks if the device is on a metered network
+        //connMgr.isActiveNetworkMetered() &&
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            Log.d(TAG, "onCreate: isactivenetworkmetered: " + connMgr.isActiveNetworkMetered());
+            Log.d(TAG, "onCreate: getActiveNetworkInfor: " + connMgr.getActiveNetworkInfo());
+        }
+
 
 
 
@@ -46,16 +65,16 @@ public class StatsJobService  extends JobService {
         SimpleDateFormat df2 = new SimpleDateFormat("ddMMyyyy");
         String currentDate = df2.format(c.getTime());
 
-        String path = this.getExternalFilesDir(null) + "/videoDIARY/Location/";
+        String path = this.getExternalFilesDir(null) + "/videoDIARY/";
 
         File directory = new File(path);
         if(!directory.exists()){
             Log.d(TAG, "onStartJob: making directory");
-            directory.
-                    mkdirs();
+            directory.mkdirs();
         }
 
-        File location = new File(directory, currentDate +".txt");
+        ArrayList<File> files1 = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        Log.d(TAG, "onStartJob: length/size of files is: " + files1.size());
 
 
         Log.d(TAG, "onReceive: we have started onrecieve");
@@ -66,13 +85,36 @@ public class StatsJobService  extends JobService {
 
         Uri = UStats.printCurrentUsageStatus(this);
         System.out.println("The uri is: " + Uri);
-
-
-//        Log.d(TAG, "onReceive: uri2 = " + Uri2);
         String theName = Uri.substring(Uri.lastIndexOf('/') + 1);
-        Log.d(TAG, "onReceive: the name is: " + theName);
-        encryptedUri = Encrypt(theName, Uri);
-        beginUpload2(theName, encryptedUri);
+        Log.d(TAG, "onStartJob: the name is: " + theName);
+
+        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        Log.d(TAG, "onStartJob: length/size of files is: " + files.size());
+        int i = 1;
+        for(File each : files){
+            Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
+            Encrypt(theName+ "_" + i, each.getAbsolutePath());
+            i = i + 1;
+            Log.d(TAG, "onReceive: i is: " + i);
+            try{
+                each.delete();
+            }catch (Exception e){
+                Log.d(TAG, "onReceive: error deleting: " + e);
+            }
+
+        }
+
+        ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, this, folder);
+
+
+//        commented out 26th Feb 2019 to try and fix upload issue
+//        String theName = Uri.substring(Uri.lastIndexOf('/') + 1);
+//        Log.d(TAG, "onReceive: the name is: " + theName);
+//        encryptedUri = Encrypt(theName, Uri);
+//        beginUpload2(theName, encryptedUri);
+//
+//        Util.uploadFilesToBucket(encryptedUri, true, logUploadCallback, this, folder   );
 
 
 
@@ -91,36 +133,6 @@ public class StatsJobService  extends JobService {
         return false;
     }
 
-    private static void writeToFile(File file, String data) {
-
-        FileOutputStream stream = null;
-        //Log.d(TAG, "The state of the media is: " + Environment.getExternalStorageState());
-        //Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
-
-        //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
-        try {
-            //Log.e("History", "In try");
-            //Log.d(TAG, "writeToFile: ");
-            stream = new FileOutputStream(file, true);
-            //Log.d(TAG, "writeToFile: 2");
-            stream.write(data.getBytes());
-            //Log.d(TAG, "writeToFile: 3");
-        } catch (FileNotFoundException e) {
-            Log.e("History", "In catch");
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-
-        try {
-
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public String Encrypt(String name, String path){
         Log.d(TAG, "Encrypt: 1");
@@ -167,8 +179,40 @@ public class StatsJobService  extends JobService {
         //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
         transferUtility.upload(Constants.BUCKET_NAME,  userID + "/UsageStats/" + name,
                 file);
+
         Log.d(TAG, "beginUpload2: end");
     }
+
+    final Util.FileTransferCallback logUploadCallback = new Util.FileTransferCallback() {
+        @SuppressLint("DefaultLocale")
+
+        private String makeLogLine(final String name, final int id, final TransferState state) {
+            Log.d("LogUploadTask", "This is AWSBIT");
+            return String.format("%s | ID: %d | State: %s", name, id, state.toString());
+        }
+
+        @Override
+        public void onCancel(int id, TransferState state) {
+            Log.d(TAG, makeLogLine("Callback onCancel()", id, state));
+        }
+
+        @Override
+        public void onStart(int id, TransferState state) {
+            Log.d(TAG, makeLogLine("Callback onStart()", id, state));
+
+        }
+
+        @Override
+        public void onComplete(int id, TransferState state) {
+            Log.d(TAG, makeLogLine("Callback onComplete()", id, state));
+            Log.d(TAG, "onComplete: should I delete here?");
+        }
+
+        @Override
+        public void onError(int id, Exception e) {
+            Log.d(TAG, makeLogLine("Callback onError()", id, TransferState.FAILED), e);
+        }
+    };
 
 }
 
