@@ -127,6 +127,12 @@
             </intent-filter>
         </receiver>
 
+        <!--<receiver android:name=".PowerConnectionUploadReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.codepath.CUSTOM_INTENT"></action>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
