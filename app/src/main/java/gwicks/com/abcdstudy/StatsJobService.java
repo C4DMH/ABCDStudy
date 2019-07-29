@@ -38,10 +38,11 @@ public class StatsJobService  extends JobService {
     String meteredNetworkData;
 
 
-    static String folder = "/AppUsageService/";
+    static String folder = "/EveryFifteenMin/";
 
     @Override
     public boolean onStartJob(JobParameters params) {
+        Log.d(TAG, "onStartJob: starting job");
 
         Calendar c = Calendar.getInstance();
 
@@ -97,15 +98,19 @@ public class StatsJobService  extends JobService {
             i = i + 1;
             Log.d(TAG, "onReceive: i is: " + i);
             try{
+                Log.d(TAG, "onStartJob: deleting");
                 each.delete();
             }catch (Exception e){
                 Log.d(TAG, "onReceive: error deleting: " + e);
             }
 
         }
+        Log.d(TAG, "onStartJob: 1");
 
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        Log.d(TAG, "onStartJob: 2");
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, this, folder);
+        Log.d(TAG, "onStartJob: 3");
 
 
 //        commented out 26th Feb 2019 to try and fix upload issue

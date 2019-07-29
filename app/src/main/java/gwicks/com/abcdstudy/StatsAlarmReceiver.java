@@ -46,6 +46,25 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: the name is: " + theName);
         encryptedUri = Encrypt(theName, Uri);
         beginUpload2(theName, encryptedUri);
+        deleteOriginalFile(Uri);
+    }
+
+    public void deleteOriginalFile(String path){
+
+        Log.d(TAG, "deleteOriginalFile: the file to be delted is: " + path);
+
+        File file = new File(path);
+
+
+        try{
+            Log.d(TAG, "onStartJob: deleting");
+            file.delete();
+        }catch (Exception e){
+            Log.d(TAG, "onReceive: error deleting: " + e);
+        }
+
+
+
     }
 
     public String Encrypt(String name, String path){
@@ -59,7 +78,7 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
         String path2 = null;
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
-            path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY/");
+            path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY2/");
             Log.d(TAG, "Encrypt: the path me get is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,7 +110,7 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
 
         File file = new File(filePath);
         //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-        transferUtility.upload(Constants.BUCKET_NAME,  userID + "/UsageStatsAlarm/" + name,
+        transferUtility.upload(Constants.BUCKET_NAME,  userID + "/EveryHour/" + name,
                 file);
         Log.d(TAG, "beginUpload2: end");
     }

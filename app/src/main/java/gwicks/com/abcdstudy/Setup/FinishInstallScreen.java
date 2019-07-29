@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,10 @@ import android.view.WindowManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +35,8 @@ import gwicks.com.abcdstudy.AnyApplication;
 import gwicks.com.abcdstudy.R;
 import gwicks.com.abcdstudy.StatsAlarmReceiver;
 import gwicks.com.abcdstudy.StatsJobService;
+
+//import gwicks.com.abcdstudy.PowerConnectionUploadReceiver;
 
 public class FinishInstallScreen  extends AppCompatActivity {
 
@@ -41,6 +48,11 @@ public class FinishInstallScreen  extends AppCompatActivity {
     //private PendingIntent startDailyEMAIntent;
 
     private PendingIntent statsIntent;
+    private PendingIntent powerIntent;
+
+    BroadcastReceiver screenStateChange;
+
+    File directory;
 
 
 
@@ -54,6 +66,45 @@ public class FinishInstallScreen  extends AppCompatActivity {
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreate: the activity is being recreated!");
         }
+
+//
+//        String datePath = this.getExternalFilesDir(null) + "/SCREEN/";
+//        directory = new File(datePath);
+//        if(!directory.exists()){
+//            Log.d(TAG, "onStartJob: making directory");
+//            directory.mkdirs();
+//        }
+//
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(Intent.ACTION_SCREEN_ON);
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        filter.addAction("android.intent.action.LOCKED_BOOT_COMPLETED");
+//
+//        screenStateChange = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                Log.d(TAG, "onReceive: gettubg somthing");
+//                Log.d(TAG, "onReceive:  intent = " + intent.getAction() + ", " + intent.getData() );
+//
+//                Calendar cal = Calendar.getInstance();
+//                long endTime = cal.getTimeInMillis();
+//                SimpleDateFormat dateOnly = new SimpleDateFormat("ddMMyyyy");
+//                String theDate = dateOnly.format(cal.getTime());
+//
+//                File location = new File(directory, theDate +".txt");
+//
+//                writeToFile(location,endTime + "," + intent.getAction() + "\n");
+//
+//
+//
+//
+//
+//
+//
+//
+//            }
+//        };
+//        registerReceiver(screenStateChange, filter);
 
 
 
@@ -126,6 +177,8 @@ public class FinishInstallScreen  extends AppCompatActivity {
 
 
         setSettingsDone(this);
+
+        //startChargingUploadAlarm();
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -297,6 +350,68 @@ public class FinishInstallScreen  extends AppCompatActivity {
 
     }
 
+
+//    public void startChargingUploadAlarm() {
+//        Log.d(TAG, "startStatsAlarm: in start alarm");
+//
+//        Calendar cal = Calendar.getInstance();
+//        long when = cal.getTimeInMillis();
+//        String timey = Long.toString(when);
+//
+//        //System.out.println("The time changed into nice format is: " + theTime);
+//
+//        Log.d("the time is: ", when + " ");
+//
+//        cal.setTimeInMillis(System.currentTimeMillis());
+//        cal.set(Calendar.HOUR_OF_DAY, 22);
+//        cal.set(Calendar.MINUTE, 7);
+//
+////        cal.set(Calendar.HOUR_OF_DAY, 16);
+////        cal.set(Calendar.MINUTE, 00);
+//
+//        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(this, PowerConnectionUploadReceiver.class);
+//        powerIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+//        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, powerIntent);
+//
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (screenStateChange != null)
+            unregisterReceiver(screenStateChange);
+    }
+
+
+    private static void writeToFile(File file, String data) {
+
+        FileOutputStream stream = null;
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
+
+        //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
+        try {
+            Log.e("History", "In try");
+            Log.d(TAG, "writeToFile: ");
+            stream = new FileOutputStream(file, true);
+            Log.d(TAG, "writeToFile: 2");
+            stream.write(data.getBytes());
+            Log.d(TAG, "writeToFile: 3");
+        } catch (FileNotFoundException e) {
+            Log.e("History", "In catch");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+    }
 
 
 
