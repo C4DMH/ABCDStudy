@@ -38,7 +38,8 @@ public class StatsJobService  extends JobService {
     String meteredNetworkData;
 
 
-    static String folder = "/EveryFifteenMin/";
+    //static String folder = "/EveryFifteenMin/";
+    static String folder = "/AppUsageService/";
 
     @Override
     public boolean onStartJob(JobParameters params) {

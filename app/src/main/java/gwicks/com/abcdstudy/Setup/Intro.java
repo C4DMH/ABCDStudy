@@ -104,7 +104,11 @@ public class Intro extends AppCompatActivity {
         }
         // Otherwise, install from the beginning
         else {
-            moveToNextStep();
+            Intent i = new Intent(Intro.this, BatteryOptimization.class);
+            Log.d(TAG, "run: 42");
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intro.this.startActivity(i);
+            //moveToNextStep();
         }
     }
 
