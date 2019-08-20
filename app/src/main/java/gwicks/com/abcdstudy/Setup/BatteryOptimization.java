@@ -35,6 +35,7 @@ public class BatteryOptimization extends AppCompatActivity {
     }
 
     public void askForBatteryOptimization(View v){
+        Log.d(TAG, "askForBatteryOptimization: 1");
 
 
 
@@ -48,7 +49,7 @@ public class BatteryOptimization extends AppCompatActivity {
                 Log.d(TAG, "run: 1");
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     Log.d(TAG, "run: 2");
-                    //return;
+                    return;
                 }
 
                 // 18th Jan 2018, below works, trying to stop using the intent ( ie try back button below).
@@ -79,6 +80,7 @@ public class BatteryOptimization extends AppCompatActivity {
         };
 
         //Old way, working 7th August 2019
+        Log.d(TAG, "askForBatteryOptimization: 2");
         Intent intent = new Intent();
         String packageName = getPackageName();
 //        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -167,6 +169,7 @@ public class BatteryOptimization extends AppCompatActivity {
                     .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            askForBatteryOptimization(null);
                             Log.d(TAG, "onClick: NO");
                         }
                     })

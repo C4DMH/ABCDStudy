@@ -42,6 +42,15 @@ public class StatsJobService  extends JobService {
     static String folder = "/AppUsageService/";
 
     @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: on destroy being called");
+
+        super.onDestroy();
+    }
+
+
+
+    @Override
     public boolean onStartJob(JobParameters params) {
         Log.d(TAG, "onStartJob: starting job");
 
@@ -85,7 +94,7 @@ public class StatsJobService  extends JobService {
         transferUtility = Util.getTransferUtility(this);
         Log.d(TAG, "onReceive: transfer utility = " + transferUtility);
 
-        Uri = UStats.printCurrentUsageStatus(this);
+        Uri = UStats.printCurrentUsageStatus(this,"/videoDIARY/" );
         System.out.println("The uri is: " + Uri);
         String theName = Uri.substring(Uri.lastIndexOf('/') + 1);
         Log.d(TAG, "onStartJob: the name is: " + theName);
@@ -152,7 +161,7 @@ public class StatsJobService  extends JobService {
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
             path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY/");
-            Log.d(TAG, "Encrypt: the path me get is: " + path2);
+            Log.d(TAG, "Encrypt: the path me get SERVICE is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {

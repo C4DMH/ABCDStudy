@@ -222,6 +222,7 @@ public class Util {
                                           final boolean deleteAfter, final Util.FileTransferCallback callback, final Context context) {
         initUserId();
         Log.d("Log", "This is in AWSUTIL upload file to bucket");
+        Log.d(TAG, "uploadFileToBucket: ONE");
         final String filePath = String.format("%s/%s", userId, filename);
         final TransferObserver observer =
                 //transferUtility.upload(BuildConfig.AWS_BUCKET_NAME, filePath, file);
@@ -289,7 +290,9 @@ public class Util {
                                           final boolean deleteAfter, final Util.FileTransferCallback callback, final String folder) {
         initUserId();
         Log.d("Log", "This is in AWSUTIL upload file to bucket");
+        Log.d(TAG, "uploadFileToBucket: TWO");
         final String filePath = String.format("%s%s", userId + folder, filename);
+        Log.d(TAG, "uploadFileToBucket: the filepath for upload is: " + filePath);
         final TransferObserver observer =
                 //transferUtility.upload(BuildConfig.AWS_BUCKET_NAME, filePath, file);
                 sTransferUtility.upload(Constants.BUCKET_NAME, filePath, file);
