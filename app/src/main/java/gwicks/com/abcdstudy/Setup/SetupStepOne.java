@@ -1,22 +1,26 @@
 package gwicks.com.abcdstudy.Setup;
 
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import gwicks.com.abcdstudy.R;
+
+//import com.google.android.material.tabs.TabLayout;
 
 public class SetupStepOne extends AppCompatActivity {
 
@@ -64,7 +68,9 @@ public class SetupStepOne extends AppCompatActivity {
 //
 //        mImageViewPager = (ViewPager) findViewById(R.id.pager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
+        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
+        TabLayout tabLayout = findViewById(R.id.tabDots);
+
         tabLayout.setupWithViewPager(pager, true);
 
 

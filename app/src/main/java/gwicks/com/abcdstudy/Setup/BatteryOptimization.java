@@ -2,7 +2,9 @@ package gwicks.com.abcdstudy.Setup;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -10,12 +12,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import gwicks.com.abcdstudy.R;
 
 public class BatteryOptimization extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class BatteryOptimization extends AppCompatActivity {
     }
 
     public void askForBatteryOptimization(View v){
+        Log.d(TAG, "askForBatteryOptimization: 1");
 
 
 
@@ -43,7 +49,7 @@ public class BatteryOptimization extends AppCompatActivity {
                 Log.d(TAG, "run: 1");
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     Log.d(TAG, "run: 2");
-                    //return;
+                    return;
                 }
 
                 // 18th Jan 2018, below works, trying to stop using the intent ( ie try back button below).
@@ -73,8 +79,8 @@ public class BatteryOptimization extends AppCompatActivity {
             }
         };
 
-
-
+        //Old way, working 7th August 2019
+        Log.d(TAG, "askForBatteryOptimization: 2");
         Intent intent = new Intent();
         String packageName = getPackageName();
 //        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -92,10 +98,97 @@ public class BatteryOptimization extends AppCompatActivity {
             //weird.. the device does not have the IME setting activity. Nook?
             // Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
         }
+
+        // New way
+
+        int permissionRequestCode = 201;
+
+        if(Build.VERSION.SDK_INT > 23){
+            //String perms =
+            //requestPermissions(perms, permissionRequestCode);
+            Log.d(TAG, "askForBatteryOptimization: about to request");
+            ActivityCompat.requestPermissions(this, new String[]{Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, permissionRequestCode);
+
+            Intent intentNew = new Intent();
+            String packageNameNew = getPackageName();
+//        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            intentNew.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intentNew.setData(Uri.parse("package:" + packageName));
+        // startActivity(intent);
+
+
+        try {
+            Log.d(TAG, "onClick: 5");
+            startActivity(intent);
+            //handler.postDelayed(checkOverlaySetting, 1000);
+        } catch (ActivityNotFoundException notFoundEx) {
+            //weird.. the device does not have the IME setting activity. Nook?
+            // Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
+        }
+
+
+        }
+
+
+
+
+
+
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        
+        switch(requestCode){
+            case 201:
+            {
 
-//    public void askForBatteryOptimization(View v){
+                String title = "EARS is more reliable with this battery permission";
+                String body ="Ears runs in the background collecting App usage habits. Because you never see it, the phone can sometimes think it is no longer needed and stop it from running. Giving us this permission helps prevent that. Are you sure you want Deny?";
+                Log.d(TAG, "onRequestPermissionsResult: lenght: " + grantResults.length + " and the seulsts: " + grantResults[0]);
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.d(TAG, "onRequestPermissionsResult: permission is granted :)");
+                }else{
+                    Log.d(TAG, "onRequestPermissionsResult: permission is NOT granted");
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(body)
+                            .setTitle(title)
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.d(TAG, "Skipping Permission");
+                                    Intent installIntent = new Intent(BatteryOptimization.this, SetupStepThree.class);
+                                    installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    BatteryOptimization.this.startActivity(installIntent);
+                                    finish();
+                                }
+                            })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            askForBatteryOptimization(null);
+                            Log.d(TAG, "onClick: NO");
+                        }
+                    })
+                            .show();
+
+
+                    //AlertDialog dialog = builder.create();
+                  //  dialog.
+
+                }
+            }
+        }
+        
+        
+        
+        
+    }
+
+    //    public void askForBatteryOptimization(View v){
 //        final Handler handler = new Handler();
 //
 //        Runnable checkOverlaySetting = new Runnable() {

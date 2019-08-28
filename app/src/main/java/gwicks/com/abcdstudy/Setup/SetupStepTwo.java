@@ -10,13 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import gwicks.com.abcdstudy.R;
 
 public class SetupStepTwo extends AppCompatActivity {

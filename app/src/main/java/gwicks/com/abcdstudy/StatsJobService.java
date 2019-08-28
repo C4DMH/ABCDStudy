@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.util.Log;
@@ -38,7 +39,17 @@ public class StatsJobService  extends JobService {
     String meteredNetworkData;
 
 
-    static String folder = "/EveryFifteenMin/";
+    //static String folder = "/EveryFifteenMin/";
+    static String folder = "/AppUsageService/";
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: on destroy being called");
+
+        super.onDestroy();
+    }
+
+
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -84,7 +95,7 @@ public class StatsJobService  extends JobService {
         transferUtility = Util.getTransferUtility(this);
         Log.d(TAG, "onReceive: transfer utility = " + transferUtility);
 
-        Uri = UStats.printCurrentUsageStatus(this);
+        Uri = UStats.printCurrentUsageStatus(this,"/videoDIARY/" );
         System.out.println("The uri is: " + Uri);
         String theName = Uri.substring(Uri.lastIndexOf('/') + 1);
         Log.d(TAG, "onStartJob: the name is: " + theName);
@@ -138,6 +149,18 @@ public class StatsJobService  extends JobService {
         return false;
     }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.d(TAG, "onLowMemory: low memory");
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Log.d(TAG, "onTaskRemoved: task removed");
+    }
+
 
     public String Encrypt(String name, String path){
         Log.d(TAG, "Encrypt: 1");
@@ -151,7 +174,7 @@ public class StatsJobService  extends JobService {
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
             path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY/");
-            Log.d(TAG, "Encrypt: the path me get is: " + path2);
+            Log.d(TAG, "Encrypt: the path me get SERVICE is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {

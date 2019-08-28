@@ -28,6 +28,7 @@ public class UStats{
     static String directoryName = "/videoDIARY/";
     static long time;
 
+
     public static List<UsageStats> getUsageStatsList(Context context){
         UsageStatsManager usm = getUsageStatsManager(context);
         Calendar calendar = Calendar.getInstance();
@@ -90,11 +91,12 @@ public class UStats{
 
 
 
-    public static String printUsageStats(List<UsageStats> usageStatsList, Context context){
+    public static String printUsageStats(List<UsageStats> usageStatsList, Context context, String folderName){
 
         Log.d(TAG, "printUsageStats: in print");
 
-        String uri = (context.getExternalFilesDir(null) + directoryName + "AppUsage_" + time + ".txt");
+//        String uri = (context.getExternalFilesDir(null) + directoryName + "AppUsage_" + time + ".txt");
+        String uri = (context.getExternalFilesDir(null) + folderName + "AppUsage_" + time + ".txt");
 
 
 
@@ -173,8 +175,8 @@ public class UStats{
         return uri;
     }
 
-    public static String printCurrentUsageStatus(Context context){
-        return printUsageStats(getUsageStatsList(context), context);
+    public static String printCurrentUsageStatus(Context context, String folderName){
+        return printUsageStats(getUsageStatsList(context), context, folderName);
     }
 
 
