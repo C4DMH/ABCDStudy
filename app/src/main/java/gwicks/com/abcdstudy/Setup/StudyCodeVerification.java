@@ -80,7 +80,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
     private static final int REQUEST_CAMERA_PERMISSION = 31;
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
-    private Boolean skip = true;
+    private Boolean skip = false;
 
     int count = 0;
 
