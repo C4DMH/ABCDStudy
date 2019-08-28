@@ -2,7 +2,6 @@ package gwicks.com.abcdstudy;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -20,6 +19,7 @@ import java.util.Calendar;
 
 import javax.crypto.NoSuchPaddingException;
 
+import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;

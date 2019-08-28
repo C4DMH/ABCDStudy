@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.util.Log;
@@ -146,6 +147,18 @@ public class StatsJobService  extends JobService {
     public boolean onStopJob(JobParameters params) {
         Log.d(TAG, "onStopJob: in on stop job");
         return false;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.d(TAG, "onLowMemory: low memory");
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Log.d(TAG, "onTaskRemoved: task removed");
     }
 
 
