@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import gwicks.com.abcdstudy.AnyApplication;
@@ -54,6 +55,7 @@ public class FinishInstallScreen  extends AppCompatActivity {
     private PendingIntent powerIntent;
 
     BroadcastReceiver screenStateChange;
+    private static final String workName = "Work";
 
     File directory;
 
@@ -131,9 +133,13 @@ public class FinishInstallScreen  extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        mWorkManager = WorkManager.getInstance();
+//        mWorkManager = WorkManager.getInstance(this);
+//        PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(WorkManagerUsage.class, 30, TimeUnit.MINUTES ).build();
+//        mWorkManager.enqueue(mRequest);
+
+        mWorkManager = WorkManager.getInstance(this);
         PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(WorkManagerUsage.class, 30, TimeUnit.MINUTES ).build();
-        mWorkManager.enqueue(mRequest);
+        mWorkManager.enqueueUniquePeriodicWork(workName, ExistingPeriodicWorkPolicy.REPLACE.REPLACE,mRequest);
 
 
     }
