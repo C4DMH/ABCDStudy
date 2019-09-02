@@ -15,15 +15,21 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import androidx.core.app.NotificationCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import gwicks.com.abcdstudy.Setup.FinishInstallScreen;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    private static final String workName = "Work";
 
     private SharedPreferences prefs;
+
     /**
      * Called when message is received.
      *
@@ -48,6 +54,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if(bool){
             sendResetNotification("EARS TOOL", "Please press to restart");
+
+            // attempt to restart the app
+            WorkManager mWorkManager;
+
+            mWorkManager = WorkManager.getInstance(this);
+            PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(WorkManagerUsage.class, 30, TimeUnit.MINUTES ).build();
+            mWorkManager.enqueueUniquePeriodicWork(workName, ExistingPeriodicWorkPolicy.REPLACE.REPLACE,mRequest);
+
+
+
 
         }else{
             //sendNotification(title, message);
